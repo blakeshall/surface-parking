@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Is there enough parking downtown?</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.css' rel='stylesheet' />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+
+    <style>
+        body { background-color: #252830; color: #cfd2da }
+        #map { width:100%; height: 600px; }
+        #answer  { font-size: 5em; }
+        .center { text-align: center; }
+        small { font-size: .15em; }
+        a { color: #1BC98E}
+        a:hover { color: #1BC98E}
+        a:visited { color: #1BC98E}
+        #footer { color: #51586a; font-size: .75em; }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-md-4" id="header">
+      <h1 id="answer" class="center">YES<small>Too much</small></h1>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div id='map'></div>
+      <p></p>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <p class="center">
+        And that's just surface parking lots. It doesn't include parking garages or even on street parking.
+      </p>
+      <p class="center"> 
+        Unless you wanted <em>FREE</em> parking. In which case you should know that free <a href="https://www.strongtowns.org/journal/2010/1/18/the-cost-of-parking.html">parking</a> is <a href="https://www.strongtowns.org/journal/2015/11/3/does-that-parking-space-come-with-fries">expensive</a>.
+      </p>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+      <div class="col-md-8">
+        <p class="center" id="footer">
+          Made by <a href="https://twitter.com/blakeshall">@blakeshall</a>
+        </p>
+      </div>
+    </div>
+</div>
+<script>
+  var map;
+  var init = function(){
+    mapboxgl.accessToken = 'pk.eyJ1IjoiYmxha2VzaGFsbCIsImEiOiJRSkN3Y3prIn0.MfDnpigJE6CVbEsV0xwLfA';
+    map = new mapboxgl.Map({
+        container: 'map', // container id
+        style: 'mapbox://styles/mapbox/streets-v9', // stylesheet location
+        // style: 'mapbox://styles/mapbox/satellite-v9',
+        center: [-84.49771336885698, 38.0454499043432],
+        zoom: 14
+    });
+    map.on('load', loadData);
+  };
+
+  var loadData = function(){
+    var source = {
+        type: 'geojson',
+        data: 'surface_parking.geojson'
+      };
+    map.addSource('parking', source);
+    map.addLayer({
+      "id": 'parking',
+      "type": "fill",
+      "source": 'parking',
+      'layout': {},
+      'paint': {
+        'fill-color': '#f00',
+        'fill-opacity': 0.5
+      }
+    });
+  };
+
+  init();
+</script>
+
+</body>
+</html>
